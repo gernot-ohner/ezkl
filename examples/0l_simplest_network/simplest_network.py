@@ -42,12 +42,11 @@ with torch.no_grad():
     test_output = net(test_input)
     print(f"Test Input: {test_input.view(-1).numpy()}, Test Output: {test_output.view(-1).numpy()}")
 
-def write_onnx():
+def write_onnx(dummy_input):
     onnx_file_path = "/Users/gernotohner/dev/rust/ezkl/examples/0l_simplest_network/onnx/simple_net.onnx"
     torch.onnx.export(net, dummy_input, onnx_file_path, export_params=True, opset_version=10,
                      do_constant_folding=True, input_names=['input'], output_names=['output'])
-
-    print(onnx_file_path)
+    return onnx_file_path
 
 def write_dummy_input():
     dummy_input = torch.tensor([[0.]], dtype=torch.float32)
@@ -55,6 +54,8 @@ def write_dummy_input():
     input_list = dummy_input.tolist()
     with open('input.json', 'w') as json_file:
         json.dump(input_list, json_file)
+
+    return dummy_input
 
 
 # ----------------------------------------------------------
